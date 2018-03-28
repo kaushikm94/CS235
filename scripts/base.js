@@ -1,4 +1,4 @@
-    /////////////////
+ /////////////////
    //             //
   //   Globals   //
  //             //
@@ -154,10 +154,10 @@ function setupSun(){
 
 	//Light color applied globally to make flight path visible.
 	
-	//scene.add( new THREE.AmbientLight( 0x404040,1 ))
+	scene.add( new THREE.AmbientLight( 0x404040,1 ))
 	
 	//Dark gray 
-	scene.add ( new THREE.AmbientLight( 0xa9a9a9))
+	//scene.add ( new THREE.AmbientLight( 0xa9a9a9))
 	
 	//White
 	//scene.add ( new THREE.AmbientLight( 0xffffff))
@@ -551,12 +551,8 @@ function updateFlights(){
 			//  Update the flight path trails.
 			/*
 			for( s = 0; s < segmentsTotal - 1; s ++ ){
-
 				index = ( f * segmentsTotal + s ) * 6
-
-
 				//  Begin line segment.
-
 				segmentBeginsAt = flightsPathSplines[ f ].getPoint(
 				
 					( s / ( segmentsTotal - 1 )) * easedValue
@@ -564,12 +560,8 @@ function updateFlights(){
 				flightsPathLines.geometry.attributes.position[ index + 0 ] = 0//segmentBeginsAt.x
 				flightsPathLines.geometry.attributes.position[ index + 1 ] = 0//segmentBeginsAt.y
 				flightsPathLines.geometry.attributes.position[ index + 2 ] = 0//segmentBeginsAt.z
-
-
 				//  End line segment.
-
 				segmentEndsAt = flightsPathSplines[ f ].getPoint(
-
 					(( s + 1 ) / ( segmentsTotal - 1 )) * easedValue
 				)
 				flightsPathLines.geometry.attributes.position[ index + 3 ] = 2//segmentEndsAt.x
@@ -717,6 +709,3 @@ function render(){
 	
 	renderer.render( scene, camera )
 }
-
-
-
