@@ -154,7 +154,7 @@ function setupSun(){
 
 	//Light color applied globally to make flight path visible.
 	
-	//scene.add( new THREE.AmbientLight( 0x404040,1 ))
+	// scene.add( new THREE.AmbientLight( 0x404040,1 ))
 	
 	//Dark gray 
 	scene.add ( new THREE.AmbientLight( 0xa9a9a9))
