@@ -1,4 +1,4 @@
-# Visulazing Real Time Flight Path 
+# Visualizing Real Time Flight Path 
 
 
 ## Abstract
