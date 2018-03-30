@@ -1,4 +1,44 @@
+
+
+var flights;
 var flightsJson;
+
+
+function errorLog(error){
+	console.log(error)
+}
+
+function airportToLatLong(airportCode){
+	var data1
+	var res = []
+
+	for(i =0; i< airports.length; ++i){
+		if(airports[i][0] == airportCode){
+			res = [airports[1], airports[2]]				
+		}
+	}
+	return res
+}
+
+
+
+function parseflightsJson(flightsJson){
+	var flights
+	for(var i=0; i < flightsJson.acList.length; ++i){
+		if(typeof flightsJson.acList != 'undefined'){
+			if(typeof flightsJson.acList[i].From != 'undefined' && typeof flightsJson.acList[i].To != 'undefined'){
+
+				var src = flightsJson.acList[i].From.split(" ");
+				var dest = flightsJson.acList[i].To.split(" ");
+				src = airportToLatLong(src[0])
+				dest = airportToLatLong(dest[0])
+				var latLong = [src[0],src[1],dest[0],dest[1]]
+				flights.push(latLong);
+			}
+		}
+	}
+	return flights
+}
 
 setInterval(function()
 {
@@ -7,10 +47,19 @@ setInterval(function()
 		url:"http://public-api.adsbexchange.com/VirtualRadar/AircraftList.json",
 		dataType:'jsonp',
 		success: function(data){
-			console.log("Parsed data");
-			var obj = jQuery.parseJSON(data);
-				// console.log(obj.feeds);
+
+			try{
+				var obj = jQuery.parseJSON(data)
+			}catch (error){
+				errorLog(error)
+			}finally{
+				console.log(obj)
+			}
 				flightsJson = obj
+				console.log(flightsJson)
+				if(typeof flightsJson != 'undefined')
+					flights = parseflightsJson(flightsJson);
+
 			}
 		});
 }, 1000);
@@ -18,58 +67,9 @@ setInterval(function()
 
 
 
-// function parseflightsJson(flightsJson){
-// 	var flights
-// 	function airportToLatLong(airportCode){
-// 		var data1
-// 		var res = []
-// 		fs.readFile('airports.dat', 'utf8', function(err, contents) {
-// 			data1 = contents;
-// 			if (err){
-// 				console.log('Could not read File: airports.dat')
-// 			}
-// 		})
-// 		var data2 = data1.split('\n');
-// 		for(i =0; i< data2.length; ++i){
-// 			var flightInfo = data2[i].split(',')
-// 			if(flightInfo[5]){
-// 				var currCode = flightInfo[5].replace(/\"/g,"").trim()
-// 				if(currCode == airportCode){
-// 					res = [parseFloat(flightInfo[6]),parseFloat(flightInfo[7])]
-// 				}
-// 			}
-// 		}
-// 		return res
-// 	}
 
 
-// 	for(var i=0; i < flightsJson.acList.length; ++i){
-
-// 		// console.log(obj.acList[i].From);
-// 		// console.log(flightsJson.acList[i].To);
-// 		if(typeof flightsJson.acList != 'undefined'){
-// 			if(typeof flightsJson.acList[i].From != 'undefined' && typeof flightsJson.acList[i].To != 'undefined'){
-// 				// console.log(flightsJson.acList[i].From)
-// 				// console.log(flightsJson.acList[i].To)
-
-// 				var src = flightsJson.acList[i].From.split(" ");
-// 				var dest = flightsJson.acList[i].To.split(" ");
-// 				// console.log(src)
-// 				// console.log(dest)
-
-
-// 				src = airportToLatLong(src[0])
-// 				dest = airportToLatLong(dest[0])
-// 				var latLong = [src[0],src[1],dest[0],dest[1]]
-// 				flights.push(latLong);
-
-// 			}
-// 		}
-// 	}
-// 	return flights
-// }
-
-// var flights = parseflightsJson(flightsJson);
+console.log(flights);
 
 if(typeof flights == 'undefined'){
 	var flights = [
