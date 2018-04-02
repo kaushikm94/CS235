@@ -1,8 +1,9 @@
- /////////////////
+	/////////////////
    //             //
   //   Globals   //
  //             //
 /////////////////
+
 
 var 
 flightSpriteSize        = 0.05,
@@ -26,10 +27,10 @@ system,
 earth,
 sun
 
-//  Flight data.
+//  Flight data. flightsTotal = flights.length,
+
 
 var 
-flightsTotal = flights.length,
 flightsPathSplines = [],
 flightsPointCloudGeometry,
 flightsPointCloud,
@@ -237,7 +238,7 @@ function setFlightTimes( index ){
 //  We can then extrapolate more detailed flight path geometry later.
 
 function setupFlightsPathSplines( radius ){
-	
+	var flightsTotal = flights.length;
 	var f,
 	originLatitude,
 	originLongitude,
@@ -327,7 +328,7 @@ function setupFlightsPathSplines( radius ){
 
 
 function setupFlightsPointCloud(){
-
+	var flightsTotal = flights.length;
 
 	//  Ah, the locals.
 	
@@ -425,7 +426,7 @@ function setupFlightsPointCloud(){
 //  The opposite is true when you zoom in.
 
 function setupFlightsPathLines() {
-
+	var flightsTotal = flights.length
 	var 
 	geometry = new THREE.BufferGeometry(),
 	material = new THREE.LineBasicMaterial({
@@ -511,7 +512,7 @@ function setupFlightsPathLines() {
 
 
 function updateFlights(){
-	
+	var flightsTotal = flights.length
 	var f, 
 	easedValue, point, 
 	segmentsTotal = 32,

@@ -144,5 +144,18 @@ a:hover {
 	background-color: #333 !important;
 }
 
+canvas{z-index:-1;}
 
-
+.dropdown-container{
+	position: absolute;
+    bottom: 120px;
+    left: 5%;
+    width: 130px;
+    right:40px;
+	top:40px;
+	z-index:1;    
+	width:5%;
+	height:60px;
+	display: inline-block;	
+	
+}
