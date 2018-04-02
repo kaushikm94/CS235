@@ -1,6 +1,6 @@
 
 
-var flights;
+var flights = []
 var flightsJson;
 
 
@@ -23,21 +23,21 @@ function airportToLatLong(airportCode){
 
 
 function parseflightsJson(flightsJson){
-	var flights
+
 	for(var i=0; i < flightsJson.acList.length; ++i){
 		if(typeof flightsJson.acList != 'undefined'){
 			if(typeof flightsJson.acList[i].From != 'undefined' && typeof flightsJson.acList[i].To != 'undefined'){
 
 				var src = flightsJson.acList[i].From.split(" ");
 				var dest = flightsJson.acList[i].To.split(" ");
-				src = airportToLatLong(src[0])
-				dest = airportToLatLong(dest[0])
-				var latLong = [src[0],src[1],dest[0],dest[1]]
+				src1 = airportToLatLong(src[0])
+				dest1 = airportToLatLong(dest[0])
+				var latLong = [src1[0],src1[1],dest1[0],dest1[1]]
 				flights.push(latLong);
 			}
 		}
 	}
-	return flights
+
 }
 
 setInterval(function()
@@ -49,16 +49,16 @@ setInterval(function()
 		success: function(data){
 
 			try{
-				var obj = jQuery.parseJSON(data)
+				var obj = data
 			}catch (error){
 				errorLog(error)
-			}finally{
-				console.log(obj)
 			}
 				flightsJson = obj
-				console.log(flightsJson)
+				// console.log(flightsJson)
 				if(typeof flightsJson != 'undefined')
-					flights = parseflightsJson(flightsJson);
+					parseflightsJson(flightsJson);
+
+				reload(base.js)
 
 			}
 		});
@@ -66,10 +66,9 @@ setInterval(function()
 
 
 
+console.log("flights array:", flights);
 
 
-
-console.log(flights);
 
 if(typeof flights == 'undefined'){
 	var flights = [
