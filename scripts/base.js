@@ -1,12 +1,7 @@
- /////////////////
-   //             //
-  //   Globals   //
- //             //
-/////////////////
-
+//GUI control variables
 var 
-flightSpriteSize        = 0.05,
-flightsPathLinesOpacity = 0.04
+flightSpriteSize        = 0.103,
+flightsPathLinesOpacity = 0.7
 
 
 //  Three.js basics.
@@ -26,6 +21,7 @@ system,
 earth,
 sun
 
+
 //  Flight data.
 
 var 
@@ -40,6 +36,14 @@ flightsStartTimes = [],
 flightsEndTimes   = []
 
 
+
+    //////////////
+   //          //
+  //   Boot   //
+ //          //
+//////////////
+
+
 document.addEventListener( 'DOMContentLoaded', function(){
 
 	if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
@@ -47,19 +51,19 @@ document.addEventListener( 'DOMContentLoaded', function(){
 
 		setupThree()
 		setupSystem()
-		setupSun()
 		setupEarth()
 		setupFlightsPathSplines()
 		setupFlightsPathLines()
 		setupFlightsPointCloud()
-		//setupGUI()
+		setupGUI()
 
-		//earth.rotation.y  -= Math.PI / 3
 		system.rotation.z += 23.4 * Math.PI / 180
 		system.rotation.x  = Math.PI / 5
 		animate()
 	}
 })
+
+
 
 
     ///////////////
@@ -80,7 +84,6 @@ function setupThree(){
 	near      = 0.01,
 	far       = 100
 	
-
 	//  Fire up the WebGL renderer.
 
 	renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -127,6 +130,7 @@ function setupThree(){
 	}
 	document.body.appendChild( stats.domElement )
 }
+
 function onThreeResize() {
 
 	var
@@ -142,15 +146,19 @@ function onThreeResize() {
 }
 
 
+
+    ////////////////
+   //            //
+  //   System   //
+ //            //
+////////////////
+
+
 function setupSystem(){
 
 	system = new THREE.Object3D()
 	system.name = 'system'
 	scene.add( system )
-}
-
-
-function setupSun(){
 
 	//Light color applied globally to make flight path visible.
 	//Darker background. Fix to this
@@ -161,23 +169,8 @@ function setupSun(){
 	
 	//White
 	//scene.add ( new THREE.AmbientLight( 0xffffff))
-
-	/*
-	sun = new THREE.DirectionalLight( 0xFFFFFF, 0.3 )
-	sun.name = 'sun'
-	sun.position.set( -4, 0, 0 )
-	sun.castShadow         = true
-	sun.shadowCameraNear   =  1
-	sun.shadowCameraFar    =  5
-	sun.shadowCameraFov    = 30
-	sun.shadowCameraLeft   = -1
-	sun.shadowCameraRight  =  1
-	sun.shadowCameraTop    =  1
-	sun.shadowCameraBottom = -1
-	sun.revolutionAngle    = -Math.PI / 4
-	system.add( sun )
-	*/
 }
+
 function setupEarth( radius ){
 	
 	earth = new THREE.Mesh( 
@@ -200,18 +193,11 @@ function setupEarth( radius ){
 }
 
 
-
-
     /////////////////
    //             //
   //   Flights   //
  //             //
 /////////////////
-
-
-//  In order to reduce the size of our dataset
-//  we’ve compressed it -- in a very dumb way ;)
-//  To make it useful again we must expand it.
 
 
 function setFlightTimes( index ){
@@ -328,8 +314,6 @@ function setupFlightsPathSplines( radius ){
 
 function setupFlightsPointCloud(){
 
-
-	//  Ah, the locals.
 	
 	var
 	f,
@@ -580,6 +564,7 @@ function updateFlights(){
 }
 
 
+
     ///////////////
    //           //
   //   Tools   //
@@ -688,15 +673,9 @@ function easeOutQuadratic( t, b, c, d ){
 	return -c / 2 * (( --t ) * ( t - 2 ) - 1 ) + b
 }
 
-
-
 function animate(){
 
 	stats.begin()
-	//earth.rotation.y    += earthRotationPerFrame
-	//sun.revolutionAngle += sunRotationPerFrame
-	//sun.position.x = 4 * Math.cos( sun.revolutionAngle )
-	//sun.position.z = 4 * Math.sin( sun.revolutionAngle )
 	render()
 	controls.update()
 	updateFlights()
@@ -709,3 +688,29 @@ function render(){
 	
 	renderer.render( scene, camera )
 }
+
+
+
+function setupGUI(){
+
+	var gui = new dat.GUI()
+
+	gui.add( window, 'flightSpriteSize', 0.01, 0.2 ).name( 'Sprite size' ).onChange( function( value ){
+	
+		var f
+
+		for( f = 0; f < flightsTotal; f ++ ){
+		
+			flightSpriteSizes[ f ] = flightSpriteSize
+		}
+		flightsPointCloudGeometry.attributes.size.needsUpdate = true
+	})
+	gui.add( window, 'flightsPathLinesOpacity', 0, 1 ).name( 'Path opacity' ).onChange( function( value ){
+	
+		flightsPathLines.material.opacity = value;
+	})
+}
+
+
+
+

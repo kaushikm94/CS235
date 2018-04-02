@@ -1,7 +1,8 @@
 
-
-var flights = []
+/*
+var flights =[];
 var flightsJson;
+var len;
 
 
 function errorLog(error){
@@ -14,26 +15,26 @@ function airportToLatLong(airportCode){
 
 	for(i =0; i< airports.length; ++i){
 		if(airports[i][0] == airportCode){
-			res = [airports[1], airports[2]]				
+			res = [airports[i][1], airports[i][2]]				
 		}
 	}
 	return res
 }
 
-
-
 function parseflightsJson(flightsJson){
-
 	for(var i=0; i < flightsJson.acList.length; ++i){
 		if(typeof flightsJson.acList != 'undefined'){
 			if(typeof flightsJson.acList[i].From != 'undefined' && typeof flightsJson.acList[i].To != 'undefined'){
 
 				var src = flightsJson.acList[i].From.split(" ");
 				var dest = flightsJson.acList[i].To.split(" ");
-				src1 = airportToLatLong(src[0])
-				dest1 = airportToLatLong(dest[0])
-				var latLong = [src1[0],src1[1],dest1[0],dest1[1]]
+				src = airportToLatLong(src[0])
+				dest = airportToLatLong(dest[0])
+				if(!Number.isNaN(src[0]) && !Number.isNaN(src[1]) && !Number.isNaN(dest[0]) && !Number.isNaN(dest[1])){
+				var latLong = [src[0],src[1],dest[0],dest[1]]
+				//console.log("Latlong value:",latLong)
 				flights.push(latLong);
+				}
 			}
 		}
 	}
@@ -174,5 +175,13 @@ if(typeof flights == 'undefined'){
 	[8.415619,124.611219,14.508647,121.019581],
 	[12.502417,124.635778,14.508647,121.019581]
 	]
+
+}
+	
+
+if(typeof flights =='undefined'){
+	console.log("Inside undefined call")
+	
 }
 
+*/
