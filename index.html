@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -12,8 +13,11 @@
 		<meta property="og:url"         content="http://stewd.io/airborne">
 		<meta property="og:image"       content="http://stewd.io/airborne/media/airborne-poster.png">
 		<meta http-equiv="cache-control" content="no-cache" />
-		
-		<title>Airborne</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+		<meta http-equiv="Pragma" content="no-cache"/>
+		<meta http-equiv="Expires" content="0"/>
+
+		<title>RT-Flight Paths</title>
 
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="styles/base.css">
@@ -25,11 +29,14 @@
 		<script charset="utf-8" src="scripts/vendor/TrackballControls.js"></script>
 		<script charset="utf-8" src="scripts/vendor/stats.min.js"></script>
 		<script charset="utf-8" src="media/data/airports.js"></script>
-		<script charset="utf-8" src="media/data/flights-base.js"></script>
+		<script charset="utf-8" src="media/data/flights-real.js"></script>
+		<script charset="utf-8" src="media/data/cities.js"></script>
+
 		<script charset="utf-8" src="scripts/vendor/dat.gui.min.js"></script>
 		<script charset="utf-8" src="scripts/base.js"></script>
 		<script type="x-shader/x-vertex" id="vertexShader">
-
+		
+	
 			attribute float size;
 			attribute vec3 customColor;
 
@@ -42,6 +49,7 @@
 				gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ));
 				gl_Position = projectionMatrix * mvPosition;
 			}
+		
 
 		</script>
 		<script type="x-shader/x-fragment" id="fragmentShader">
@@ -56,6 +64,7 @@
 				gl_FragColor = vec4( color * vColor, 1 );
 				gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
 			}
+	
 
 		</script>
 		

@@ -159,3 +159,20 @@ canvas{z-index:-1;}
 	display: inline-block;	
 	
 }
+
+
+
+/*************************************************************
+ * 
+ *  For cities and info boxes
+ */
+
+#info {
+	position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+}
+
