@@ -1,5 +1,5 @@
 
-/*
+
 var flights =[];
 var flightsJson;
 var len;
@@ -8,6 +8,36 @@ var len;
 function errorLog(error){
 	console.log(error)
 }
+
+// function loadFragmentShader(){	
+// 		uniform vec3 color;
+// 		uniform sampler2D texture;
+
+// 		varying vec3 vColor;
+
+// 		void main(){
+			
+// 			gl_FragColor = vec4( color * vColor, 1 );
+// 			gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+// 		}
+// 	}
+
+
+// function loadVertexShader(){
+// 		attribute float size;
+// 		attribute vec3 customColor;
+
+// 		varying vec3 vColor;
+
+// 		void main(){
+		
+// 			vColor = customColor;
+// 			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+// 			gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ));
+// 			gl_Position = projectionMatrix * mvPosition;
+// 		}
+// 	}
+
 
 function airportToLatLong(airportCode){
 	var data1
@@ -31,9 +61,11 @@ function parseflightsJson(flightsJson){
 				src = airportToLatLong(src[0])
 				dest = airportToLatLong(dest[0])
 				if(!Number.isNaN(src[0]) && !Number.isNaN(src[1]) && !Number.isNaN(dest[0]) && !Number.isNaN(dest[1])){
-				var latLong = [src[0],src[1],dest[0],dest[1]]
-				//console.log("Latlong value:",latLong)
+				var latLong = [parseFloat(src[0]),parseFloat(src[1]),parseFloat(dest[0]),parseFloat(dest[1])]
+				// console.log("Latlong value:",latLong)
 				flights.push(latLong);
+
+
 				}
 			}
 		}
@@ -41,14 +73,40 @@ function parseflightsJson(flightsJson){
 
 }
 
-setInterval(function()
-{
+// setInterval(function()
+// {
+// 	$.ajax({
+// 		type:"GET",
+// 		url:"http://public-api.adsbexchange.com/VirtualRadar/AircraftList.json",
+// 		dataType:'jsonp',
+// 		success: function(data){
+
+// 			try{
+// 				var obj = data
+// 			}catch (error){
+// 				errorLog(error)
+// 			}
+// 				flightsJson = obj
+// 				// console.log(flightsJson)
+// 				if(typeof flightsJson != 'undefined')
+// 					parseflightsJson(flightsJson);
+
+// 				callBase()
+// 				// reload(base.js)
+
+// 			}
+// 		});
+// }, 5000);
+
+
+$(document).ready(function(){
+	console.log("document load")
 	$.ajax({
 		type:"GET",
 		url:"http://public-api.adsbexchange.com/VirtualRadar/AircraftList.json",
 		dataType:'jsonp',
 		success: function(data){
-
+			console.log("ajax success")
 			try{
 				var obj = data
 			}catch (error){
@@ -59,11 +117,19 @@ setInterval(function()
 				if(typeof flightsJson != 'undefined')
 					parseflightsJson(flightsJson);
 
-				reload(base.js)
+				// flights = flights.splice(0,1000)
+
+				console.log('parsed flight data')
+				callBase()
+
+				console.log('reloaded base')
+
+				// reload(base.js)
 
 			}
 		});
-}, 1000);
+
+})
 
 
 
@@ -184,4 +250,4 @@ if(typeof flights =='undefined'){
 	
 }
 
-*/
+
