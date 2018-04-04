@@ -14,9 +14,9 @@
 		<meta http-equiv="cache-control" content="no-cache" />
 		
 		<title>Airborne</title>
-
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="styles/base.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -58,38 +58,41 @@
 			}
 
 		</script>
+		<script type="text/javascript">
+			function myFunction(){
+				var s = document.getElementById("source");
+				var d = document.getElementById("dest");
+				var start = s.options[s.selectedIndex].value;
+				var end = d.options[d.selectedIndex].value;
+				console.log(start,end)
+				f(start,end);
+				
+			}
+		</script>
 		
 	</head>
 	<body>
-		<div id="three"></div>
-		<div class="container">
-			<div class="row">
-				<div class="dropdown-container">
-				  	<div class="col">
-						<div class="dropdown" id="dd1" style="margin-bottom: 10%;">
-						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Source
-						  <span class="caret"></span></button>
-						  <ul class="dropdown-menu" >
-						    <li><a href="https://www.google.com">San Jose</a></li>
-						    <li><a href="#">San Francisco</a></li>
-						    <li><a href="#">Los Angeles</a></li>
-						  </ul>
-						</div>
-						<div class="dropdown" id="dd2" >
-						  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="">Destination
-						  <span class="caret"></span></button>
-						  <ul class="dropdown-menu">
-						    <li><a href="https://www.google.com">Chicago</a></li>
-						    <li><a href="#">New York</a></li>
-						    <li><a href="#">Dallas</a></li>
-						  </ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		
-		
+		<div id="three"></div>
+		<div class="dropdown-container" onchange="myFunction()">
+			<form>
+			<div class="dropdown" id="dd1" style="margin-bottom: 10%; width: 170%">
+			    <select class="form-control" id="source">
+				  <option value="" disabled selected>Source</option>
+				  <option value="SJ">SJ</option>
+				  <option value="SF">SF</option>
+				  <option value="IN">IN</option>
+			    </select>
+			</div>
+			<div class="dropdown form-group" id="dd2" >
+				<select class="form-control" id="dest" style="width: 170%">
+				  <option value="" disabled selected>Destination</option>
+				  <option value="UK">UK</option>
+				  <option value="AUS">AUS</option>
+				  <option value="GER">GER</option>
+				</select>
+			</div>
+		</form>
+		</div>	
 	</body>
 </html>

@@ -1,8 +1,23 @@
+//Filter data according to user input
+var source,dest;
+
+function f(start,end){
+	console.log("Inside f")
+	console.log(start,end)
+	source = start;
+	dest = end;
+	window.location.reload(false)
+	console.log("true condition")
+	console.log(source,dest) 
+	window.location.href = window.location.href
+	//jQuery("body").load(window.location.href)
+}
+
 //GUI control variables
 var 
 flightSpriteSize        = 0.103,
 flightsPathLinesOpacity = 0.7
-
+console.log(source,dest) 
 
 //  Three.js basics.
 
@@ -14,7 +29,7 @@ controls,
 stats
 
 
-//  Main stage dressing.
+//  Main stage 
 
 var
 system,
@@ -25,7 +40,7 @@ sun
 //  Flight data.
 
 var 
-flightsTotal = flights.length,
+
 flightsPathSplines = [],
 flightsPointCloudGeometry,
 flightsPointCloud,
@@ -35,14 +50,7 @@ flightsPathLines,
 flightsStartTimes = [],
 flightsEndTimes   = []
 
-
-
-    //////////////
-   //          //
-  //   Boot   //
- //          //
-//////////////
-
+//Boot
 
 document.addEventListener( 'DOMContentLoaded', function(){
 
@@ -63,14 +71,6 @@ document.addEventListener( 'DOMContentLoaded', function(){
 	}
 })
 
-
-
-
-    ///////////////
-   //           //
-  //   Three   //
- //           //
-///////////////
 
 
 function setupThree(){
@@ -115,7 +115,6 @@ function setupThree(){
 
 
 	//  Finally, add a performance monitoring bug
-	//  (“bug” in the video sense, not the programming sense!)
 	//  so we can see how speedy (or sluggish) our render is.
 
 	stats = new Stats()
@@ -187,21 +186,14 @@ function setupEarth( radius ){
 		})
 	)
 	earth.name = 'earth'
-	earth.castShadow = true
-	earth.receiveShadow = false
+	//earth.castShadow = true
+	//earth.receiveShadow = false
 	system.add( earth )
 }
 
-
-    /////////////////
-   //             //
-  //   Flights   //
- //             //
-/////////////////
-
+//Flights
 
 function setFlightTimes( index ){
-	
 	var 
 	flight    = flights[ index ],
 	distance  = latlongDistance( flight[ 0 ], flight[ 1 ], flight[ 2 ], flight[ 3 ]),
@@ -209,14 +201,12 @@ function setFlightTimes( index ){
 	duration  = Math.floor( distance * 1000 * 80 )
 	
 
-	//  Just a little bit of variation in there.
+	//  Little varition for the flights
 
 	duration *= 0.8 + Math.random()
 	flightsStartTimes[ index ] = startTime
 	flightsEndTimes[   index ] = startTime + duration
 }
-
-
 
 
 //  Here we’re going to compute the skeletons of our flight paths.
@@ -235,7 +225,7 @@ function setupFlightsPathSplines( radius ){
 	spline
 
 	if( radius === undefined ) radius = 1
-	for( f = 0; f < flightsTotal; f ++ ){
+	for( f = 0; f < flights.length; f ++ ){
 
 		originLatitude       = flights[ f ][ 0 ]
 		originLongitude      = flights[ f ][ 1 ]
@@ -245,7 +235,6 @@ function setupFlightsPathSplines( radius ){
 
 		//  Let’s make local flights fly lower altitudes
 		//  and long haul flights fly higher altitudes.
-		//  You dig man? You get it? You see what I mean?
 
 		distance = latlongDistance( originLatitude, originLongitude, destinationLatitude, destinationLongitude )
 		altitudeMax = 0.02 + distance * 0.1
@@ -314,9 +303,9 @@ function setupFlightsPathSplines( radius ){
 
 function setupFlightsPointCloud(){
 
-	
 	var
 	f,
+	flightsTotal = flights.length,
 	flightsColors = new Float32Array( flightsTotal * 3 ),
 	color = new THREE.Color(),
 	material
@@ -347,7 +336,6 @@ function setupFlightsPointCloud(){
 		//  against a background of local flights.
 
 		color.setHSL( 
-
 			(( flights[ f ][ 1 ] + 100 ) % 360 ) / 360,
 			1.0,
 			0.55
@@ -356,7 +344,7 @@ function setupFlightsPointCloud(){
 		flightsColors[ 3 * f + 1 ] = color.g//  Green
 		flightsColors[ 3 * f + 2 ] = color.b//  Blue
 
-		flightSpriteSizes[ f ] = flightSpriteSize//@@  IN THE FUTURE SCALE BY NUMBER OF PASSENGERS ;)
+		flightSpriteSizes[ f ] = flightSpriteSize
 	}
 	flightsPointCloudGeometry.addAttribute( 'position',    new THREE.BufferAttribute( flightPositions, 3 ))
 	flightsPointCloudGeometry.addAttribute( 'customColor', new THREE.BufferAttribute( flightsColors, 3 ))
@@ -397,8 +385,6 @@ function setupFlightsPointCloud(){
 }
 
 
-
-
 //  We’re going to draw arcs along the flight splines
 //  to show entire flight paths at a glance.
 //  These lines are 2D, in that they do not scale
@@ -411,6 +397,7 @@ function setupFlightsPointCloud(){
 function setupFlightsPathLines() {
 
 	var 
+	flightsTotal = flights.length,
 	geometry = new THREE.BufferGeometry(),
 	material = new THREE.LineBasicMaterial({
 		
@@ -497,6 +484,7 @@ function setupFlightsPathLines() {
 function updateFlights(){
 	
 	var f, 
+	flightsTotal = flights.length,
 	easedValue, point, 
 	segmentsTotal = 32,
 	s, index,
@@ -692,6 +680,7 @@ function render(){
 
 
 function setupGUI(){
+	flightsTotal = flights.length
 
 	var gui = new dat.GUI()
 
