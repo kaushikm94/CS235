@@ -344,10 +344,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		flightSpriteSizes = new Float32Array( flightsTotal )
 
 
-		//  For each flight we’ll need to add a Point
-		//  to our global Point Cloud.
-		//  Each point as an XYZ position and RGB color
-		//  and an image sprite size.
+		//  For each flight we’ll need to add a Point to our global Point Cloud.
+		//  Each point as an XYZ position and RGB color and an image sprite size.
 
 		for( f = 0; f < flightsTotal; f ++ ){
 
@@ -356,10 +354,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			flightPositions[ 3 * f + 2 ] = 0//  Z
 
 
-			//  We’re going to based our flight’s Hue
-			//  on its origin longitude.
-			//  This way we can easy spot foreign flights
-			//  against a background of local flights.
+			//  We’re going to based our flight’s Hue on its origin longitude.
+			//  This way we can easy spot foreign flights against a background of local flights.
 
 			color.setHSL( 
 
@@ -410,11 +406,9 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 	}
 
 
-	//  We’re going to draw arcs along the flight splines
-	//  to show entire flight paths at a glance.
-	//  These lines are 2D, in that they do not scale
-	//  according to zoom level. 
-	//  This is very appealing because as you zoom out
+	//  We’re going to draw arcs along the flight splines to show entire flight paths at a glance.
+	//  These lines are 2D, in that they do not scale according to zoom level. 
+	//  This is very appealing because as you zoom out 
 	//  they become more visually prevalent -- like seeing 
 	//  the sum of the parts rather than the individual bits.
 	//  The opposite is true when you zoom in.
@@ -606,9 +600,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		latitudeB  *= Math.PI / 180
 		longitudeB *= Math.PI / 180
 
-
-		//  Now we can get seriously mathy.
-
 		var
 		d = 2 * Math.asin( Math.sqrt( 
 		
@@ -691,7 +682,7 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		requestAnimationFrame( animate )
 	}
 
-	//Render the scene
+	//  Render the scene
 	function render(){
 		
 		renderer.render( scene, camera )

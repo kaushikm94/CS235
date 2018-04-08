@@ -5,10 +5,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=600">
 		<meta name="description"        content="Live Flight data visualized on a WebGL globe">
-		<!--
-		<meta name="keywords"           content="Data visualization animation flight patterns javascript webgl three.js canvas html5 css3"> -->
 		<meta name="copyright"          content="Siddarth Kumar, Kaushik Murli">
-		<meta http-equiv="cache-control" content="no-cache" />
 		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 		<meta http-equiv="Pragma" content="no-cache"/>
 		<meta http-equiv="Expires" content="0"/>
@@ -68,7 +65,7 @@
 			}
 		</script>
 
-		<!--Get data from filter-->
+		<!--Get data from filter. Values set in JavaScript file-->
 		<script type="text/javascript">
 			function myFunction(){
 				var s = document.getElementById("source");
@@ -119,64 +116,66 @@
 			</div>
 			<div class='legend-source'>Source: <a href="#link to source">ADB-s exchange</a></div>
 		</div>
-		<style type='text/css'>
 		
-		  .my-legend .legend-title {
+	</body>
+</html>
+
+<!-- Styling for legend -->
+<style type='text/css'>
+		.my-legend .legend-title {
 		    text-align: left;
 		    margin-bottom: 5px;
 		    font-weight: bold;
 		    font-size: 150%;
 		    color: #FFFFFF;
-		    }
-		  .my-legend .legend-scale ul {
-		    margin: 0;
-		    margin-bottom: 5px;
-		    padding: 0;
-		    float: left;
-		    list-style: none;
-		    color : FFFFFF;
-		    }
-		  .my-legend .legend-scale ul li {
-		    font-size: 100%;
-		    list-style: none;
-		    margin-left: 0;
-		    line-height: 18px;
-		    margin-bottom: 2px;
-		    }
-		  .my-legend ul.legend-labels li span {
-		    display: block;
-		    float: left;
-		    height: 16px;
-		    width: 30px;
-		    margin-right: 5px;
-		    margin-left: 0;
-		    border: 1px solid #999;
-		    }
-		    .my-legend ul.legend-labels li{
-		    color:#FFFFFF; 
-		    font-size: 130%;
-		    }
-		  .my-legend .legend-source{
-		    font-size: 110%;
-		    color: #FFFFFF;
-		    clear: both;
-		    }
-		  .my-legend .legend-source a{
-		  	color: #FFFFFF;
-		  }  
-		  .my-legend a {
-		    color: #777;
-		    }
-		  .my-legend{
-		  	max-width: 300px !important;
-		  	z-index: 100;
-		  	border-color: #FFFFFF;
-		    position: absolute;
-		    display: block;	
-		    top: 75%;
+		}
+		.my-legend .legend-scale ul {
+			margin: 0;
+			margin-bottom: 5px;
+			padding: 0;
+			float: left;
+			list-style: none;
+			color : FFFFFF;
+		}
+		.my-legend .legend-scale ul li {
+			font-size: 100%;
+			list-style: none;
+			margin-left: 0;
+			line-height: 18px;
+			margin-bottom: 2px;
+		}
+		.my-legend ul.legend-labels li span {
+			display: block;
+			float: left;
+			height: 16px;
+			width: 30px;
+			margin-right: 5px;
+			margin-left: 0;
+			border: 1px solid #999;
+		}
+		.my-legend ul.legend-labels li{
+			color:#FFFFFF; 
+			font-size: 130%;
+		}
+		.my-legend .legend-source{
+			font-size: 110%;
+			color: #FFFFFF;
+			clear: both;
+		}
+		.my-legend .legend-source a{
+			color: #FFFFFF;
+		}  
+		.my-legend a {
+			color: #777;
+		}
+		.my-legend{
+			max-width: 300px !important;
+			z-index: 100;
+			border-color: #FFFFFF;
+			position: absolute;
+			display: block;	
+			top: 75%;
 			width: 100%;
 			left: 5%
-		  }
-		</style>
-	</body>
-</html>
+		}		 
+</style>
