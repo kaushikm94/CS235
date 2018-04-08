@@ -1,14 +1,6 @@
 @charset "utf-8";
 
-
-
-
-    /***************/
-   /*             */
-  /*   General   */
- /*             */
-/***************/
-
+/* General */
 
 html, body {
 
@@ -46,15 +38,7 @@ a:hover {
 	color: #FFF;
 }
 
-
-
-
-    /*****************/
-   /*               */
-  /*   Interface   */
- /*               */
-/*****************/
-
+/* Interface */
 
 .dg.ac .property-name, 
 .dg.ac input,
@@ -109,15 +93,7 @@ a:hover {
 	font-size: 2vw;
 }
 
-
-
-
-    /*************/
-   /*           */
-  /*   Stats   */
- /*           */
-/*************/
-
+/* Stats */
 
 #stats {
 
@@ -144,6 +120,12 @@ a:hover {
 	background-color: #333 !important;
 }
 
+#flightsPathLines{
+	background-color: yellow;
+}
+
+/* Filter dropdowns */
+
 canvas{z-index:-1;}
 
 .dropdown-container{
@@ -159,3 +141,20 @@ canvas{z-index:-1;}
 	display: inline-block;	
 	
 }
+
+
+
+/*************************************************************
+ * 
+ *  For cities and info boxes
+ */
+
+#info {
+	position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+}
+
