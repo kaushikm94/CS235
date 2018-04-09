@@ -15,3 +15,5 @@ Javascript will be used for the implementation of the web-application and the th
 The text boxes would allow the user to specify the source and the destination cities. The filters would allow user the select the number of flights they wanna see between the cities.  Using the flight data we will also display the cities on the globe, which have the highest air-traffic, based just on our dataset. 
 We also aim to add more visualizations for other attributes in our dataset, once we have the above features working. If three.js becomes infeasible, we will use D3 for creating a 2-D visualization of the flight path on a world map.
 
+## Running the application
+Download the repo on the local machine and run `index.html`
