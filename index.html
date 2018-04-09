@@ -1,28 +1,40 @@
+<!-- CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 -->
+
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=600">
-		<meta name="description"        content="Flight data visualized on a WebGL globe. Just like everyone else.">
-		<meta name="keywords"           content="data visualization animation flight patterns javascript webgl three.js canvas html5 css3">
-		<meta name="copyright"          content="Stewart Smith 2015">
-		<meta property="og:type"        content="website">
-		<meta property="og:title"       content="Airborne">
-		<meta property="og:description" content="Flight data visualized on a WebGL globe. Just like everyone else.">
-		<meta property="og:url"         content="http://stewd.io/airborne">
-		<meta property="og:image"       content="http://stewd.io/airborne/media/airborne-poster.png">
-		<title>Airborne</title>
+		<meta name="description"        content="Live Flight data visualized on a WebGL globe">
+		<meta name="copyright"          content="Siddarth Kumar, Kaushik Murli">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+		<meta http-equiv="Pragma" content="no-cache"/>
+		<meta http-equiv="Expires" content="0"/>
+
+		<title>RT-Flight Paths</title>
+
+		<!-- Styling required-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="styles/base.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script charset="utf-8" src="scripts/vendor/three.min.js"></script>
 		<script charset="utf-8" src="scripts/vendor/Detector.js"></script>
 		<script charset="utf-8" src="scripts/vendor/TrackballControls.js"></script>
 		<script charset="utf-8" src="scripts/vendor/stats.min.js"></script>
+		<script charset="utf-8" src="media/data/airports.js"></script>
+		<script charset="utf-8" src="media/data/flights-real.js"></script>
+		<script charset="utf-8" src="media/data/cities.js"></script>
 		<script charset="utf-8" src="scripts/vendor/dat.gui.min.js"></script>
-		<script charset="utf-8" src="media/data/flights-base.js"></script>
-		<script charset="utf-8" src="scripts/analytics.js"></script>
 		<script charset="utf-8" src="scripts/base.js"></script>
+		
+		<!-- Shader that provides clipspace coordinates -->
 		<script type="x-shader/x-vertex" id="vertexShader">
-
+		
+	
 			attribute float size;
 			attribute vec3 customColor;
 
@@ -35,8 +47,11 @@
 				gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ));
 				gl_Position = projectionMatrix * mvPosition;
 			}
+		
 
 		</script>
+
+		<!-- Fragment shader to provide color -->
 		<script type="x-shader/x-fragment" id="fragmentShader">
 			
 			uniform vec3 color;
@@ -49,10 +64,125 @@
 				gl_FragColor = vec4( color * vColor, 1 );
 				gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
 			}
+		</script>
 
-		</script>		
+		<!--Get data from filter. Values set in JavaScript file-->
+		<script type="text/javascript">
+			function myFunction(){
+				var s = document.getElementById("source");
+				var d = document.getElementById("dest");
+				var start = s.options[s.selectedIndex].value;
+				var end = d.options[d.selectedIndex].value;
+				console.log(start,end)
+				f(start,end);
+				
+			}
+		</script>
 	</head>
+
 	<body>
-		<div id="three"></div>		
+		<div id="three"></div>
+		<!-- Dropdowns for filter -->
+		<div class="dropdown-container" onchange="myFunction()">
+			<form>
+			<div class="dropdown" id="dd1" style="margin-bottom: 10%; width: 170%">
+			    <select class="form-control" id="source">
+				  <option value="" disabled selected>Source</option>
+				  <option value="KSJC,37.36259841918945,-121.92900085449219"> SAN JOSE </option>
+				  <option value="KSFO,37.61899948120117,-122.375"> SAN FRANCISCO </option>
+				  <option value="LFPG,49.0127983093,2.54999995232"> PARIS </option>
+				  <option value="VIDP,28.566499710083008,77.10310363769531"> DELHI </option>
+				  <option value="ZBAA,40.080101013183594,116.58499908447266"> BEIJING </option>
+			    </select>
+			</div>
+			<div class="dropdown form-group" id="dd2" >
+				<select class="form-control" id="dest" style="width: 170%">
+				  <option value="" disabled selected>Destination</option>
+				  <option value="KSJC,37.36259841918945,-121.92900085449219"> SAN JOSE </option>
+				  <option value="KSFO,37.61899948120117,-122.375"> SAN FRANCISCO </option>
+				  <option value="LFPG,49.0127983093,2.54999995232"> PARIS </option>
+				  <option value="VIDP,28.566499710083008,77.10310363769531"> DELHI </option>
+				  <option value="ZBAA,40.080101013183594,116.58499908447266"> BEIJING </option>
+				</select>
+			</div>
+		</form>
+		</div>
+
+		<div class='my-legend'>
+			<div class='legend-title'>Flight color Hue</div>
+			<div class='legend-scale'>
+			  <ul class='legend-labels'>
+			    <li><span style='background:#7CFC00;'></span>Europe - Green</li>
+			    <li><span style='background:#FFA500;'></span>North America - Orange</li>
+			    <li><span style='background:#FF1493;'></span>North America - Pink</li>
+			    <li><span style='background:#FFFF00;'></span>South America - Yellow</li>
+			    <li><span style='background:#EE82EE;'></span>Australia - Purple</li>
+			   	<li><span style='background:#87cefa;'></span>China - Light blue</li>
+			    <li><span style='background:#0000ff;'></span>Korea - Dark blue</li>
+			  </ul>
+			</div>
+			<div class='legend-source'>Source: <a href="#link to source">ADB-s exchange</a></div>
+		</div>
+		
 	</body>
 </html>
+
+<!-- Styling for legend -->
+<style type='text/css'>
+		.my-legend .legend-title {
+		    text-align: left;
+		    margin-bottom: 5px;
+		    font-weight: bold;
+		    font-size: 150%;
+		    color: #FFFFFF;
+		}
+		.my-legend .legend-scale ul {
+			margin: 0;
+			margin-bottom: 5px;
+			padding: 0;
+			float: left;
+			list-style: none;
+			color : FFFFFF;
+		}
+		.my-legend .legend-scale ul li {
+			font-size: 100%;
+			list-style: none;
+			margin-left: 0;
+			line-height: 18px;
+			margin-bottom: 2px;
+		}
+		.my-legend ul.legend-labels li span {
+			display: block;
+			float: left;
+			height: 16px;
+			width: 30px;
+			margin-right: 5px;
+			margin-left: 0;
+			border: 1px solid #999;
+		}
+		.my-legend ul.legend-labels li{
+			color:#FFFFFF; 
+			font-size: 130%;
+		}
+		.my-legend .legend-source{
+			font-size: 110%;
+			color: #FFFFFF;
+			clear: both;
+		}
+		.my-legend .legend-source a{
+			color: #FFFFFF;
+		}  
+		.my-legend a {
+			color: #777;
+		}
+		.my-legend{
+			max-width: 300px !important;
+			z-index: 100;
+			border-color: #FFFFFF;
+			position: absolute;
+			display: block;	
+			top: 73%;
+			width: 100%;
+			left: 5%
+		}		 
+</style>

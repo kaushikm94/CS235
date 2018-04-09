@@ -1,3 +1,6 @@
+/* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
+
+//Sample flight data
 var flights = [
 [43.449928,39.956589,55.606186,49.278728],
 [46.283333,48.006278,55.606186,49.278728],
