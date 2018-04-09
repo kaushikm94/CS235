@@ -1,13 +1,39 @@
 /* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
 
 //Filter data according to user input
-var source,dest;
+var
+	source,
+	dest,
+	sCode,
+	dCode,
+	sourceLat,
+	sourceLong,
+	destLat,
+	destLong,
+	temp = []
 
 
 function f(start,end){
 	source = start;
 	dest = end;
-	console.log(source,dest) 
+	console.log("Source and dest:",source,dest)
+	//if(source!==null && dest!==null)
+	if(typeof source != 'undefined' && typeof dest !='undefined' && source != '' &&dest !='')
+	{
+		temp = source.split(",")
+		console.log(temp)
+		sCode = temp[0]
+		sourceLat = temp[1]
+		sourceLong = temp[2]
+		temp = dest.split(",")
+		console.log("temp again", temp)
+		dCode = temp[0]
+		destLat = temp[1]
+		destLong = temp[2]
+	}
+	console.log("Source code and dest code",sCode,dCode)
+	console.log("sourceLat and destlat:",sourceLat,destLat)
+	console.log("sourceLong and destlong:",sourceLong,destLong)
 }
 
 
@@ -542,39 +568,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		// flightsPathLines.needsUpdate = true
 		flightsPointCloudGeometry.attributes.position.needsUpdate = true
 	}
-
-
-	/************************************************************************
-	 * render cities
-	 */
-	// function renderCities()
-	// {
-	// 	var locationXYZ = ll2xyz(cities[2],cities[3])
-
-	// 	var nameGeo
-		
-	// 	var loader = new THREE.FontLoader();
-
-	// 	loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
-
-	// 	 nameGeo = new THREE.TextGeometry( 'Hello three.js!', {
-	// 			font: font,
-	// 			size: 80,
-	// 			height: 5,
-	// 			curveSegments: 12,
-	// 			bevelEnabled: true,
-	// 			bevelThickness: 10,
-	// 			bevelSize: 8,
-	// 			bevelSegments: 5
-	// 		} );
-	// 	} );
-	// 	var name = new THREE.mesh( 
-	// 		nameGeo, new THREE.meshBasicMaterial({color: 0xffffff})
-	//     )
-
-	// 	scene.add(name);
-
-	// }
 
 	// Lat long to xyz coordinates
 	function ll2xyz( latitude, longitude, radius ){
