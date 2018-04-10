@@ -7,10 +7,11 @@
 		<meta name="viewport" content="width=600">
 		<meta name="description"        content="Live Flight data visualized on a WebGL globe">
 		<meta name="copyright"          content="Siddarth Kumar, Kaushik Murli">
+		<!--
 		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 		<meta http-equiv="Pragma" content="no-cache"/>
 		<meta http-equiv="Expires" content="0"/>
-
+		-->
 		<title>RT-Flight Paths</title>
 
 		<!-- Styling required-->
@@ -26,6 +27,7 @@
 		<script charset="utf-8" src="scripts/vendor/TrackballControls.js"></script>
 		<script charset="utf-8" src="scripts/vendor/stats.min.js"></script>
 		<script charset="utf-8" src="media/data/airports.js"></script>
+		<script charset="utf-8" src="media/data/flights-base.js"></script>
 		<script charset="utf-8" src="media/data/flights-real.js"></script>
 		<script charset="utf-8" src="media/data/cities.js"></script>
 		<script charset="utf-8" src="scripts/vendor/dat.gui.min.js"></script>
@@ -72,10 +74,7 @@
 		<script type="text/javascript">
 			function myFunction(){
 				var s = document.getElementById("source");
-				//var d = document.getElementById("dest");
 				var start = s.options[s.selectedIndex].value;
-				//var end = d.options[d.selectedIndex].value;
-				//console.log(start,end)
 				f(start);		
 			}
 		</script>
@@ -95,7 +94,6 @@
 				  <option value="VIDP,28.566499710083008,77.10310363769531"> DELHI </option>
 				  <option value="ZBAA,40.080101013183594,116.58499908447266"> BEIJING </option>
 			    </select>
-
 			</div>
 			<!--
 			<div class="dropdown form-group" id="dd2" >

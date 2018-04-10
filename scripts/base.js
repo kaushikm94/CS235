@@ -1,7 +1,5 @@
 /* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
 
-//base call count
-
 //Filter data according to user input
 var
 	source,
@@ -16,7 +14,8 @@ var
 	newFlights = []
 
 
-function f(start,end){
+function f(start){
+	newFlights = []
 	flights = flightsMain.slice()
 	source = start;
 	if(source){
@@ -24,18 +23,14 @@ function f(start,end){
 		sCode = temp[0]
 		sourceLat = parseFloat(temp[1])
 		sourceLong = parseFloat(temp[2])
-		// temp = dest.split(",")
-		// console.log("temp again", temp)
-		// dCode = temp[0]
-		// destLat = temp[1]
-		// destLong = temp[2]
 		console.log("Source Lat and long:", sourceLat,sourceLong)
 		console.log("Flights data initially: ",flights)
 		for ( i=0;i< flights.length;i++){
 			if((Math.abs(sourceLat - flights[i][0])< 0.02)  && (Math.abs(sourceLong - flights[i][1])< 0.02)){
-				//console.log("Inside if")
+				if(!Number.isNaN(flights[i][2]) && !Number.isNaN(flights[i][3])){
 				var newlatLong = [parseFloat(flights[i][0]),parseFloat(flights[i][1]),parseFloat(flights[i][2]),parseFloat(flights[i][3])]
 				newFlights.push(newlatLong)
+				}
 			}
 		}
 	console.log("NewFlights contents:",newFlights)
@@ -68,9 +63,12 @@ function callBase(flag){
 
 	//  Main stage dressing.
 	var
-	system,
-	earth,
+	system = new THREE.Object3D(),
+	earth = new THREE.Object3D(),
 	stars
+	
+	system.updateMatrix();
+	earth.updateMatrix();
 
 
 	//  Flight data.
@@ -85,27 +83,6 @@ function callBase(flag){
 	flightsStartTimes = [],
 	flightsEndTimes   = []
 
-  
-	// document.addEventListener( 'DOMContentLoaded', function(){
-
-	// 	if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
-	// 	else {
-
-	// 		setupThree()
-	// 		setupSystem()
-	// 		setupEarth()
-	// 		// renderCities()S
-	// 		setupFlightsPathSplines()
-	// 		setupFlightsPathLines()
-	// 		setupFlightsPointCloud()
-	// 		setupGUI()
-
-	// 		system.rotation.z += 23.4 * Math.PI / 180
-	// 		system.rotation.x  = Math.PI / 5
-	// 		animate()
-	// 	}
-	// 	console.log('Setup success')
-	// })
 
 //Listener commented such that the base.js can be re-called to load real time data
 if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
@@ -117,8 +94,10 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			setupFlightsPathSplines()
 			setupFlightsPathLines()
 			setupFlightsPointCloud()
-			if(flag === 1)
+			animate();
+			if(flag === 1){	
 				setupGUI()
+			}
 	
 			system.rotation.z += 23.4 * Math.PI / 180
 			system.rotation.x  = Math.PI / 5
@@ -132,7 +111,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 
 //Basic setup
 	function setupThree(){
-
 		var
 		container = document.getElementById( 'three' ),
 		angle     = 30,
@@ -305,9 +283,7 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		pointsTotal, points, pointLL, pointXYZ, p,
 		arcAngle, arcRadius,
 		spline
-
-		flightsTotal = flights.length
-
+		
 		if( radius === undefined ) radius = 1
 		for( f = 0; f < flightsTotal; f ++ ){
 
@@ -377,8 +353,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 
 	function setupFlightsPointCloud(){
 		
-		flightsTotal = flights.length
-
 		var
 		f,
 		flightsColors = new Float32Array( flightsTotal * 3 ),
@@ -422,8 +396,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		flightsPointCloudGeometry.computeBoundingBox()
 
 
-		//  Now that we have the basic position and color data
-		//  it’s time to finesse it with our shaders.
+		//  We have the basic position and color data
+		//  Finesse it with our shaders.
 
 		material = new THREE.ShaderMaterial({
 
@@ -460,9 +434,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 	//  The opposite is true when you zoom in.
 
 	function setupFlightsPathLines() {
-		
-		flightsTotal = flights.length
-
 		
 		var 
 		geometry = new THREE.BufferGeometry(),
@@ -537,7 +508,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		geometry.dynamic = true
 
 		//  Pack into the global varaible which is added to the scene later
-
 		flightsPathLines = new THREE.Line( geometry, material, THREE.LinePieces )
 		flightsPathLines.dynamic = true
 		earth.add( flightsPathLines )
@@ -586,11 +556,13 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			}
 		}
 		//flightsPathLines.geometry.computeBoundingSphere()
-		// flightsPathLines.geometry.attributes.position.needsUpdate = true
-		// flightsPathLines.geometry.verticesNeedUpdate = true
-		// flightsPathLines.geometry.elementsNeedUpdate = true
-		// flightsPathLines.needsUpdate = true
+		/*
+		flightsPathLines.geometry.attributes.position.needsUpdate = true
+		flightsPathLines.geometry.verticesNeedUpdate = true
+		flightsPathLines.geometry.elementsNeedUpdate = true
+		flightsPathLines.needsUpdate = true */
 		flightsPointCloudGeometry.attributes.position.needsUpdate = true
+
 	}
 
 	// Lat long to xyz coordinates
