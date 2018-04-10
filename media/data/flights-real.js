@@ -1,9 +1,15 @@
 /* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
 
+
+var N_FLIGHTS = 1000
+
 //Globals
+
 var flights =[];
 var flightsJson;
 var len;
+var flightsMain = []
+
 
 
 function errorLog(error){
@@ -40,6 +46,8 @@ function parseflightsJson(flightsJson){
 			}
 		}
 	}
+
+	flightsMain = flights.slice()
 }
 
 // setInterval(function()
@@ -68,7 +76,7 @@ function parseflightsJson(flightsJson){
 // }, 5000);
 
 
-//Load live data
+// Load live data
 
 $(document).ready(function(){
 	console.log("Document loaded")
@@ -88,6 +96,11 @@ $(document).ready(function(){
 				if(typeof flightsJson != 'undefined')
 					parseflightsJson(flightsJson);
 
+				flights = flights.splice(0,N_FLIGHTS)
+
+				console.log('parsed flight data')
+				callBase(++N_BASE_CALL)
+
 				// Flight data can be spliced according to need. Data compression can be a future modification
 				//flights = flights.splice(0,500)
 
@@ -101,4 +114,5 @@ $(document).ready(function(){
 
 })
 
-console.log("Flights array:", flights);
+// console.log("flights array:", flights);
+
