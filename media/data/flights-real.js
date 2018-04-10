@@ -1,8 +1,10 @@
 
-
+var N_FLIGHTS = 1000
 var flights =[];
 var flightsJson;
 var len;
+var flightsMain = []
+
 
 
 function errorLog(error){
@@ -70,6 +72,7 @@ function parseflightsJson(flightsJson){
 			}
 		}
 	}
+	flightsMain = flights.slice()
 
 }
 
@@ -117,10 +120,10 @@ $(document).ready(function(){
 				if(typeof flightsJson != 'undefined')
 					parseflightsJson(flightsJson);
 
-				// flights = flights.splice(0,1000)
+				flights = flights.splice(0,N_FLIGHTS)
 
 				console.log('parsed flight data')
-				callBase()
+				callBase(++N_BASE_CALL)
 
 				console.log('reloaded base')
 
@@ -133,7 +136,7 @@ $(document).ready(function(){
 
 
 
-console.log("flights array:", flights);
+// console.log("flights array:", flights);
 
 
 

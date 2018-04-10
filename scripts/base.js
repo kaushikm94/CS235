@@ -1,17 +1,64 @@
+/* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
+
+
+//base call count
+
+//Filter data according to user input
+var
+	source,
+	dest,
+	sCode,
+	//dCode,
+	sourceLat,
+	sourceLong,
+	//destLat,
+	//destLong,
+	temp = [],
+	newFlights = []
+
+
+function f(start,end){
+	flights = flightsMain.slice()
+	source = start;
+	if(source){
+		temp = source.split(",")
+		sCode = temp[0]
+		sourceLat = parseFloat(temp[1])
+		sourceLong = parseFloat(temp[2])
+		// temp = dest.split(",")
+		// console.log("temp again", temp)
+		// dCode = temp[0]
+		// destLat = temp[1]
+		// destLong = temp[2]
+		console.log("Source Lat and long:", sourceLat,sourceLong)
+		console.log("Flights data initially: ",flights)
+		for ( i=0;i< flights.length;i++){
+			if((Math.abs(sourceLat - flights[i][0])< 0.02)  && (Math.abs(sourceLong - flights[i][1])< 0.02)){
+				//console.log("Inside if")
+				var newlatLong = [parseFloat(flights[i][0]),parseFloat(flights[i][1]),parseFloat(flights[i][2]),parseFloat(flights[i][3])]
+				newFlights.push(newlatLong)
+			}
+		}
+	console.log("NewFlights contents:",newFlights)
+	flights = []
+	flights = newFlights;
+	console.log("New flight data" , flights)
+	callBase(++N_BASE_CALL);
+  	}
+}
+
+
 //GUI control variables
-	var 
-	flightSpriteSize        = 0.103,
-	flightsPathLinesOpacity = 0.7
+var 
+	flightSpriteSize        = 0.105,
+	flightsPathLinesOpacity = 0.6
 
 
-function callBase(){
-	//GUI control variables
-	var 
-	flightSpriteSize        = 0.103,
-	flightsPathLinesOpacity = 0.7
+//  Three.js basics.
 
-	//  Three.js basics.
-
+function callBase(flag){
+	
+    // Three js scene elements
 	var
 	camera,
 	scene,
@@ -19,17 +66,14 @@ function callBase(){
 	controls,
 	stats
 
-
 	//  Main stage dressing.
-
 	var
 	system,
 	earth,
-	sun
+	stars
 
 
 	//  Flight data.
-
 	var 
 	flightsTotal = flights.length,
 	flightsPathSplines = [],
@@ -40,14 +84,6 @@ function callBase(){
 	flightsPathLines,
 	flightsStartTimes = [],
 	flightsEndTimes   = []
-
-
-
-	    //////////////
-	   //          //
-	  //   Boot   //
-	 //          //
-	//////////////
 
   
 	// document.addEventListener( 'DOMContentLoaded', function(){
@@ -71,34 +107,29 @@ function callBase(){
 	// 	console.log('Setup success')
 	// })
 
-
+//Listener commented such that the base.js can be re-called to load real time data
 if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		else {
-
 			setupThree()
 			setupSystem()
 			setupEarth()
-			// renderCities()S
 			setupFlightsPathSplines()
 			setupFlightsPathLines()
 			setupFlightsPointCloud()
-			setupGUI()
-
+			if(flag === 1)
+				setupGUI()
+	
 			system.rotation.z += 23.4 * Math.PI / 180
 			system.rotation.x  = Math.PI / 5
 			animate()
+
 		}
 		console.log('Setup success')
+		console.log('Base call no', N_BASE_CALL)
+		console.log('flights:',flights.length)
 
 
-
-	    ///////////////
-	   //           //
-	  //   Three   //
-	 //           //
-	///////////////
-
-
+//Basic setup
 	function setupThree(){
 
 		var
@@ -127,22 +158,19 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		camera.position.z = 5
 
 
-		//  Add trackball controls for panning (click/touch and drag)
-		//  and zooming (mouse wheel or gestures.)
+		//  Trackball controls for panning (click/touch and drag) and zooming (mouse wheel or gestures.)
 
 		controls = new THREE.TrackballControls( camera, renderer.domElement )
 		controls.dynamicDampingFactor = 0.2
 		controls.addEventListener( 'change', render )
 
 
-		//  Create the scene tree to attach objects to.
+		//  Create the scene to attach objects to.
 
 		scene = new THREE.Scene()
 
 
-		//  Finally, add a performance monitoring bug
-		//  (“bug” in the video sense, not the programming sense!)
-		//  so we can see how speedy (or sluggish) our render is.
+		//  Performance monitoring bug added to see how fast our render is
 
 		stats = new Stats()
 		stats.breakLine = function(){
@@ -157,6 +185,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		document.body.appendChild( stats.domElement )
 	}
 
+
+	//Resize
 	function onThreeResize() {
 
 		var
@@ -172,14 +202,7 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 	}
 
 
-
-	    ////////////////
-	   //            //
-	  //   System   //
-	 //            //
-	////////////////
-
-
+	// Apply lighting to the system
 	function setupSystem(){
 
 		system = new THREE.Object3D()
@@ -195,8 +218,11 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		
 		//White
 		//scene.add ( new THREE.AmbientLight( 0xffffff))
+
+		//scene.add ( new THREE.AmbientLight( 0xC6C2C2))
 	}
 
+	//Mesh setup to model the Earth
 	function setupEarth( radius ){
 		
 		earth = new THREE.Mesh( 
@@ -206,26 +232,48 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 
 				map         : THREE.ImageUtils.loadTexture( 'media/earth.png'  ),
 				bumpMap     : THREE.ImageUtils.loadTexture( 'media/earth-bump.jpg' ),
-				bumpScale   : 0.02,
+				bumpScale   : 0.05,
 				specularMap : THREE.ImageUtils.loadTexture( 'media/earth-specular.png' ),
 				specular    : new THREE.Color( 0xFFFFFF ),
 				shininess   : 4
 			})
 		)
+		
+		//Starry background
+		stars = new THREE.Mesh(
+
+			new THREE.SphereGeometry( 90, 64, 64), 
+			new THREE.MeshBasicMaterial({
+				map:  THREE.ImageUtils.loadTexture('media/galaxy_starfield.png'), 
+				side: THREE.BackSide,
+				shininess: 4
+			})
+			)
+		//stars.name = 'stars'
+		//system.add( stars )
+		//scene.add( stars )
+
+		/* 
+		// create the geometry sphere
+			var geometry  = new THREE.SphereGeometry(90, 32, 32)
+			// create the material, using a texture of startfield
+			var material  = new THREE.MeshBasicMaterial()
+			material.map   = THREE.ImageUtils.loadTexture('images/galaxy_starfield.png')
+			material.side  = THREE.BackSide
+			// create the mesh based on geometry and material
+			var mesh  = new THREE.Mesh(geometry, material)
+		*/
+		
 		earth.name = 'earth'
 		earth.castShadow = true
 		earth.receiveShadow = false
-		system.add( earth )
+		
+		system.add( earth )	
+		system.add( stars )
 	}
 
 
-	    /////////////////
-	   //             //
-	  //   Flights   //
-	 //             //
-	/////////////////
-
-
+	// Flights setup.
 	function setFlightTimes( index ){
 		
 		var 
@@ -235,17 +283,14 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		duration  = Math.floor( distance * 1000 * 80 )
 		
 
-		//  Just a little bit of variation in there.
+		//  Random used to give some variation.
 
 		duration *= 0.8 + Math.random()
 		flightsStartTimes[ index ] = startTime
-		flightsEndTimes[   index ] = startTime + duration
+		flightsEndTimes[ index ] = startTime + duration
 	}
 
-
-
-
-	//  Here we’re going to compute the skeletons of our flight paths.
+	//  Compute skeletons of our flight paths.
 	//  We can then extrapolate more detailed flight path geometry later.
 
 	function setupFlightsPathSplines( radius ){
@@ -260,6 +305,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		arcAngle, arcRadius,
 		spline
 
+		flightsTotal = flights.length
+
 		if( radius === undefined ) radius = 1
 		for( f = 0; f < flightsTotal; f ++ ){
 
@@ -268,41 +315,33 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			destinationLatitude  = flights[ f ][ 2 ]
 			destinationLongitude = flights[ f ][ 3 ]
 
-
-			//  Let’s make local flights fly lower altitudes
-			//  and long haul flights fly higher altitudes.
-			//  You dig man? You get it? You see what I mean?
+			// 	Altitude is set to make local flights fly at lower altitudes
+			//  and long haul flights fly at higher altitudes.
 
 			distance = latlongDistance( originLatitude, originLongitude, destinationLatitude, destinationLongitude )
 			altitudeMax = 0.02 + distance * 0.1
 
-
-			//  Aight yall. 
 			//  We’re about to plot the path of this flight
-			//  using X number of points
-			//  to generate a smooth-ish curve.
+			//  using X number of points to generate a smooth-ish curve. 
 
 			pointsTotal = 8
 			points = []
 			for( p = 0; p < pointsTotal + 1; p ++ ){
 
-
-				//  Is our path shooting straight up? 0 degrees.
-				//  Is our path shooting straight down? 180 degrees.
-				//  But likely we’re somewhere in between.
+				//  Is our path shooting straight up? 0 degrees or straight down? 180 degree
+				//  Maybe in between
 
 				arcAngle  = p * 180 / pointsTotal
 
 
-				//  The base ‘radius‘ here is intended to be Earth’s radius.
+				//  The radius is intended to be Earth’s radius.
 				//  Then we build a sine curve on top of that
 				//  with its max amplitude being ‘altitudeMax’.
 
 				arcRadius = radius + ( Math.sin( arcAngle * Math.PI / 180 )) * altitudeMax
 
 
-				//  So at this point in the flight (p)
-				//  where are we between origin and destination?
+				//  So at this point in the flight (p) where are we between origin and destination?
 
 				pointLL = latlongTween( 
 
@@ -324,21 +363,20 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 				points.push( new THREE.Vector3( pointXYZ.x, pointXYZ.y, pointXYZ.z ))
 			}
 
-
-			//  Pack up this SplineCurve
-			//  then push it into our global splines array.
+			//  Pack up this SplineCurve then push it into our global splines array.
 			//  Also set the flight time.
 
 			spline = new THREE.SplineCurve3( points )
+			//console.log(spline)
 			flightsPathSplines.push( spline )
 			setFlightTimes( f )
 		}
 	}
 
 
-
-
 	function setupFlightsPointCloud(){
+		
+		flightsTotal = flights.length
 
 		
 		var
@@ -347,18 +385,13 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		color = new THREE.Color(),
 		material
 
-
-		//  Globals. Yup.
-
 		flightsPointCloudGeometry = new THREE.BufferGeometry()	
 		flightPositions = new Float32Array( flightsTotal * 3 )
 		flightSpriteSizes = new Float32Array( flightsTotal )
 
 
-		//  For each flight we’ll need to add a Point
-		//  to our global Point Cloud.
-		//  Each point as an XYZ position and RGB color
-		//  and an image sprite size.
+		//  For each flight we’ll need to add a Point to our global Point Cloud.
+		//  Each point as an XYZ position and RGB color and an image sprite size.
 
 		for( f = 0; f < flightsTotal; f ++ ){
 
@@ -367,10 +400,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			flightPositions[ 3 * f + 2 ] = 0//  Z
 
 
-			//  We’re going to based our flight’s Hue
-			//  on its origin longitude.
-			//  This way we can easy spot foreign flights
-			//  against a background of local flights.
+			//  We’re going to based our flight’s Hue on its origin longitude.
+			//  This way we can easy spot foreign flights against a background of local flights.
 
 			color.setHSL( 
 
@@ -382,8 +413,9 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			flightsColors[ 3 * f + 1 ] = color.g//  Green
 			flightsColors[ 3 * f + 2 ] = color.b//  Blue
 
-			flightSpriteSizes[ f ] = flightSpriteSize//@@  IN THE FUTURE SCALE BY NUMBER OF PASSENGERS ;)
+			flightSpriteSizes[ f ] = flightSpriteSize
 		}
+
 		flightsPointCloudGeometry.addAttribute( 'position',    new THREE.BufferAttribute( flightPositions, 3 ))
 		flightsPointCloudGeometry.addAttribute( 'customColor', new THREE.BufferAttribute( flightsColors, 3 ))
 		flightsPointCloudGeometry.addAttribute( 'size',        new THREE.BufferAttribute( flightSpriteSizes, 1 ))
@@ -413,29 +445,25 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			transparent:    true
 		})
 
-
-		//  Finally, let’s pack this into our global variable
-		//  so we can play with it later,
-		//  and add it to the scene.
+		//  Pack this into our global variable and add it to the scene later.
 
 		flightsPointCloud = new THREE.PointCloud( flightsPointCloudGeometry, material )
 		earth.add( flightsPointCloud )
 	}
 
 
-
-
-	//  We’re going to draw arcs along the flight splines
-	//  to show entire flight paths at a glance.
-	//  These lines are 2D, in that they do not scale
-	//  according to zoom level.
-	//  This is kind of beautiful because as you zoom out
+	//  We’re going to draw arcs along the flight splines to show entire flight paths at a glance.
+	//  These lines are 2D, in that they do not scale according to zoom level. 
+	//  This is very appealing because as you zoom out 
 	//  they become more visually prevalent -- like seeing 
 	//  the sum of the parts rather than the individual bits.
 	//  The opposite is true when you zoom in.
 
 	function setupFlightsPathLines() {
+		
+		flightsTotal = flights.length
 
+		
 		var 
 		geometry = new THREE.BufferGeometry(),
 		material = new THREE.LineBasicMaterial({
@@ -458,7 +486,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		beginsAtNormal,
 		endsAtNormal
 
-
+		//   Calculate where segment starts and ends. 
+		//   Color is set accordingly
 		for( f = 0; f < flightsTotal; f ++ ){
 
 			for( s = 0; s < segmentsTotal - 1; s ++ ){
@@ -504,16 +533,14 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		}
 		geometry.addAttribute( 'position', new THREE.BufferAttribute( segments, 3 ))
 		geometry.addAttribute( 'color',    new THREE.BufferAttribute( colors,   3 ))
-		geometry.computeBoundingSphere()
-		geometry.dynamic = true//@@  NEEDED?
+		//geometry.computeBoundingSphere()
+		geometry.dynamic = true
 
-
-		//  Finally, let’s pack this into our global variable
-		//  so we can play with it later,
-		//  and add it to the scene.
+		//  Pack into the global varaible which is added to the scene later
 
 		flightsPathLines = new THREE.Line( geometry, material, THREE.LinePieces )
-		flightsPathLines.dynamic = true//@@  IS THIS STILL NEEDED?
+		flightsPathLines.dynamic = true
+		// console.log(flightsPathLines)
 		earth.add( flightsPathLines )
 	}
 
@@ -530,7 +557,10 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		segmentBeginsAt, 
 		segmentEndsAt
 
+		flightsTotal = flights.length
+		// console.log(flightsTotal)
 
+		
 		for( f = 0; f < flightsTotal; f ++ ){
 
 			if( Date.now() > flightsStartTimes[ f ] ){
@@ -547,38 +577,13 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 					easedValue = 0
 					setFlightTimes( f )
 				}
-
 				// console.log('eased value',easedValue)
+
 				//  Update the Point Cloud.
-				//  Lots of cute little airplanes...
-				// easedValue = 0
 				point = flightsPathSplines[ f ].getPoint( easedValue )
 				flightPositions[ f * 3 + 0 ] = point.x
 				flightPositions[ f * 3 + 1 ] = point.y
 				flightPositions[ f * 3 + 2 ] = point.z
-
-
-				//  Update the flight path trails.
-				/*
-				for( s = 0; s < segmentsTotal - 1; s ++ ){
-					index = ( f * segmentsTotal + s ) * 6
-					//  Begin line segment.
-					segmentBeginsAt = flightsPathSplines[ f ].getPoint(
-					
-						( s / ( segmentsTotal - 1 )) * easedValue
-					)
-					flightsPathLines.geometry.attributes.position[ index + 0 ] = 0//segmentBeginsAt.x
-					flightsPathLines.geometry.attributes.position[ index + 1 ] = 0//segmentBeginsAt.y
-					flightsPathLines.geometry.attributes.position[ index + 2 ] = 0//segmentBeginsAt.z
-					//  End line segment.
-					segmentEndsAt = flightsPathSplines[ f ].getPoint(
-						(( s + 1 ) / ( segmentsTotal - 1 )) * easedValue
-					)
-					flightsPathLines.geometry.attributes.position[ index + 3 ] = 2//segmentEndsAt.x
-					flightsPathLines.geometry.attributes.position[ index + 4 ] = 2//segmentEndsAt.y
-					flightsPathLines.geometry.attributes.position[ index + 5 ] = 2//segmentEndsAt.z
-				}
-				*/
 			}
 		}
 		//flightsPathLines.geometry.computeBoundingSphere()
@@ -589,47 +594,7 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		flightsPointCloudGeometry.attributes.position.needsUpdate = true
 	}
 
-
-	/************************************************************************
-	 * render cities
-	 */
-	// function renderCities()
-	// {
-	// 	var locationXYZ = ll2xyz(cities[2],cities[3])
-
-	// 	var nameGeo
-		
-	// 	var loader = new THREE.FontLoader();
-
-	// 	loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
-
-	// 	 nameGeo = new THREE.TextGeometry( 'Hello three.js!', {
-	// 			font: font,
-	// 			size: 80,
-	// 			height: 5,
-	// 			curveSegments: 12,
-	// 			bevelEnabled: true,
-	// 			bevelThickness: 10,
-	// 			bevelSize: 8,
-	// 			bevelSegments: 5
-	// 		} );
-	// 	} );
-	// 	var name = new THREE.mesh( 
-	// 		nameGeo, new THREE.meshBasicMaterial({color: 0xffffff})
-	//     )
-
-	// 	scene.add(name);
-
-	// }
-
-
-	    ///////////////
-	   //           //
-	  //   Tools   //
-	 //           //
-	///////////////
-
-
+	// Lat long to xyz coordinates
 	function ll2xyz( latitude, longitude, radius ){
 		
 		var
@@ -643,18 +608,17 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			z: radius * Math.sin( phi ) * Math.sin( theta )
 		}
 	}
+
+	// Intermediate points on the spline curve
 	function latlongTween( latitudeA, longitudeA, latitudeB, longitudeB, tween ){
 		
 
-		//  First, let’s convert degrees to radians.
+		//  Convert degrees to radians.
 
 		latitudeA  *= Math.PI / 180
 		longitudeA *= Math.PI / 180
 		latitudeB  *= Math.PI / 180
 		longitudeB *= Math.PI / 180
-
-
-		//  Now we can get seriously mathy.
 
 		var
 		d = 2 * Math.asin( Math.sqrt( 
@@ -696,10 +660,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 	}
 
 
-	//  This resource is fantastic (borrowed the algo from there):
-	//  http://www.movable-type.co.uk/scripts/latlong.html
-	//  Would be nice to integrate this with latlongTween() to reduce
-	//  code and bring the styles more in line with each other.
+	//  Borrowed algorithm from http://www.movable-type.co.uk/scripts/latlong.html
+	//  Future enhancement would be to integrate with latlongtween.
 
 	function latlongDistance( latitudeA, longitudeA, latitudeB, longitudeB ){
 
@@ -710,7 +672,7 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		φ2 = latitudeB * Math.PI / 180,
 		Δφ = ( latitudeB  - latitudeA  ) * Math.PI / 180,
 		Δλ = ( longitudeB - longitudeA ) * Math.PI / 180,
-
+ 
 		a = Math.sin( Δφ / 2 ) * Math.sin( Δφ / 2 ) +
 			Math.cos( φ1 ) * Math.cos( φ2 ) *
 			Math.sin( Δλ / 2 ) * Math.sin( Δλ / 2 ),
@@ -718,13 +680,11 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 
 		distanceMeters = earthRadiusMeters * c
 
-
-		//  For this demo we don’t need actual distance in kilometers
-		//  because we’re just using a factor to scale time by
-		//  so we’ll just return the normal of earth’s circumference.
-
+		//  Actual distance in km is not needed. This is used as a factor to scale time
+		//  A normal of the earth's circumference is returned. 
 		return c
 	}
+
 	function easeOutQuadratic( t, b, c, d ){
 		
 		if(( t /= d / 2 ) < 1 ) return c / 2 * t * t + b
@@ -742,21 +702,22 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		requestAnimationFrame( animate )
 	}
 
+	//  Render the scene
 	function render(){
 		
 		renderer.render( scene, camera )
 	}
 
-
-
+	//  GUI setup 
+	//  Control of sprite size and path opacity.
 	function setupGUI(){
 
 		var gui = new dat.GUI()
 
-		gui.add( window, 'flightSpriteSize', 0.01, 0.2 ).name( 'Sprite size' ).onChange( function( value ){
+		gui.add( window, 'flightSpriteSize', 0.01, 0.2 ).name( 'Point size' ).onChange( function( value ){
 		
 			var f
-
+			flightsTotal = flights.length
 			for( f = 0; f < flightsTotal; f ++ ){
 			
 				flightSpriteSizes[ f ] = flightSpriteSize
@@ -770,6 +731,4 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 	}
 
 }
-
-
 
