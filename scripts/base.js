@@ -1,6 +1,5 @@
 /* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
 
-
 //base call count
 
 //Filter data according to user input
@@ -59,6 +58,7 @@ var
 function callBase(flag){
 	
     // Three js scene elements
+
 	var
 	camera,
 	scene,
@@ -113,6 +113,7 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 			setupThree()
 			setupSystem()
 			setupEarth()
+
 			setupFlightsPathSplines()
 			setupFlightsPathLines()
 			setupFlightsPointCloud()
@@ -378,7 +379,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		
 		flightsTotal = flights.length
 
-		
 		var
 		f,
 		flightsColors = new Float32Array( flightsTotal * 3 ),
@@ -540,7 +540,6 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 
 		flightsPathLines = new THREE.Line( geometry, material, THREE.LinePieces )
 		flightsPathLines.dynamic = true
-		// console.log(flightsPathLines)
 		earth.add( flightsPathLines )
 	}
 

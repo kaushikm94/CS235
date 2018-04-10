@@ -1,14 +1,8 @@
+/* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
+
 @charset "utf-8";
 
-
-
-
-    /***************/
-   /*             */
-  /*   General   */
- /*             */
-/***************/
-
+/* General */
 
 html, body {
 
@@ -46,15 +40,7 @@ a:hover {
 	color: #FFF;
 }
 
-
-
-
-    /*****************/
-   /*               */
-  /*   Interface   */
- /*               */
-/*****************/
-
+/* Interface */
 
 .dg.ac .property-name, 
 .dg.ac input,
@@ -109,15 +95,7 @@ a:hover {
 	font-size: 2vw;
 }
 
-
-
-
-    /*************/
-   /*           */
-  /*   Stats   */
- /*           */
-/*************/
-
+/* Stats */
 
 #stats {
 
@@ -143,6 +121,12 @@ a:hover {
 
 	background-color: #333 !important;
 }
+
+#flightsPathLines{
+	background-color: yellow;
+}
+
+/* Filter dropdowns */
 
 canvas{z-index:-1;}
 

@@ -1,5 +1,10 @@
+/* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
+
 
 var N_FLIGHTS = 1000
+
+//Globals
+
 var flights =[];
 var flightsJson;
 var len;
@@ -10,36 +15,6 @@ var flightsMain = []
 function errorLog(error){
 	console.log(error)
 }
-
-// function loadFragmentShader(){	
-// 		uniform vec3 color;
-// 		uniform sampler2D texture;
-
-// 		varying vec3 vColor;
-
-// 		void main(){
-			
-// 			gl_FragColor = vec4( color * vColor, 1 );
-// 			gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
-// 		}
-// 	}
-
-
-// function loadVertexShader(){
-// 		attribute float size;
-// 		attribute vec3 customColor;
-
-// 		varying vec3 vColor;
-
-// 		void main(){
-		
-// 			vColor = customColor;
-// 			vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-// 			gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ));
-// 			gl_Position = projectionMatrix * mvPosition;
-// 		}
-// 	}
-
 
 function airportToLatLong(airportCode){
 	var data1
@@ -53,11 +28,12 @@ function airportToLatLong(airportCode){
 	return res
 }
 
+
+//Parse flight data for latitude and longitude
 function parseflightsJson(flightsJson){
 	for(var i=0; i < flightsJson.acList.length; ++i){
 		if(typeof flightsJson.acList != 'undefined'){
 			if(typeof flightsJson.acList[i].From != 'undefined' && typeof flightsJson.acList[i].To != 'undefined'){
-
 				var src = flightsJson.acList[i].From.split(" ");
 				var dest = flightsJson.acList[i].To.split(" ");
 				src = airportToLatLong(src[0])
@@ -66,14 +42,12 @@ function parseflightsJson(flightsJson){
 				var latLong = [parseFloat(src[0]),parseFloat(src[1]),parseFloat(dest[0]),parseFloat(dest[1])]
 				// console.log("Latlong value:",latLong)
 				flights.push(latLong);
-
-
 				}
 			}
 		}
 	}
-	flightsMain = flights.slice()
 
+	flightsMain = flights.slice()
 }
 
 // setInterval(function()
@@ -102,21 +76,23 @@ function parseflightsJson(flightsJson){
 // }, 5000);
 
 
+//Load live data
+
 $(document).ready(function(){
-	console.log("document load")
+	console.log("Document loaded")
 	$.ajax({
 		type:"GET",
 		url:"http://public-api.adsbexchange.com/VirtualRadar/AircraftList.json",
 		dataType:'jsonp',
 		success: function(data){
-			console.log("ajax success")
+			console.log("Ajax call success")
 			try{
-				var obj = data
+				flightsJson = data
 			}catch (error){
 				errorLog(error)
 			}
-				flightsJson = obj
-				// console.log(flightsJson)
+				//flightsJson = obj
+				console.log('Flight data',flightsJson)
 				if(typeof flightsJson != 'undefined')
 					parseflightsJson(flightsJson);
 
@@ -125,14 +101,19 @@ $(document).ready(function(){
 				console.log('parsed flight data')
 				callBase(++N_BASE_CALL)
 
-				console.log('reloaded base')
+				// Flight data can be spliced according to need. Data compression can be a future modification
+				//flights = flights.splice(0,500)
 
-				// reload(base.js)
+				console.log('Parsed flight data from ajax')
+				callBase()
 
+				//Base js recalled to load ajax call data
+				console.log('Reloaded base.js with new flight data')
 			}
 		});
 
 })
+
 
 
 
@@ -253,4 +234,5 @@ if(typeof flights =='undefined'){
 	
 }
 
+console.log("Flights array:", flights);
 
