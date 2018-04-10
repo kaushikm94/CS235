@@ -1,39 +1,49 @@
 /* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
 
+//base call count
+
 //Filter data according to user input
 var
 	source,
 	dest,
 	sCode,
-	dCode,
+	//dCode,
 	sourceLat,
 	sourceLong,
-	destLat,
-	destLong,
-	temp = []
+	//destLat,
+	//destLong,
+	temp = [],
+	newFlights = []
 
 
 function f(start,end){
+	flights = flightsMain.slice()
 	source = start;
-	dest = end;
-	console.log("Source and dest:",source,dest)
-	//if(source!==null && dest!==null)
-	if(typeof source != 'undefined' && typeof dest !='undefined' && source != '' &&dest !='')
-	{
+	if(source){
 		temp = source.split(",")
-		console.log(temp)
 		sCode = temp[0]
-		sourceLat = temp[1]
-		sourceLong = temp[2]
-		temp = dest.split(",")
-		console.log("temp again", temp)
-		dCode = temp[0]
-		destLat = temp[1]
-		destLong = temp[2]
-	}
-	console.log("Source code and dest code",sCode,dCode)
-	console.log("sourceLat and destlat:",sourceLat,destLat)
-	console.log("sourceLong and destlong:",sourceLong,destLong)
+		sourceLat = parseFloat(temp[1])
+		sourceLong = parseFloat(temp[2])
+		// temp = dest.split(",")
+		// console.log("temp again", temp)
+		// dCode = temp[0]
+		// destLat = temp[1]
+		// destLong = temp[2]
+		console.log("Source Lat and long:", sourceLat,sourceLong)
+		console.log("Flights data initially: ",flights)
+		for ( i=0;i< flights.length;i++){
+			if((Math.abs(sourceLat - flights[i][0])< 0.02)  && (Math.abs(sourceLong - flights[i][1])< 0.02)){
+				//console.log("Inside if")
+				var newlatLong = [parseFloat(flights[i][0]),parseFloat(flights[i][1]),parseFloat(flights[i][2]),parseFloat(flights[i][3])]
+				newFlights.push(newlatLong)
+			}
+		}
+	console.log("NewFlights contents:",newFlights)
+	flights = []
+	flights = newFlights;
+	console.log("New flight data" , flights)
+	callBase(++N_BASE_CALL);
+  	}
 }
 
 
@@ -45,8 +55,10 @@ var
 
 //  Three.js basics.
 
-function callBase(){
+function callBase(flag){
 	
+    // Three js scene elements
+
 	var
 	camera,
 	scene,
@@ -62,7 +74,6 @@ function callBase(){
 
 
 	//  Flight data.
-
 	var 
 	flightsTotal = flights.length,
 	flightsPathSplines = [],
@@ -99,21 +110,24 @@ function callBase(){
 //Listener commented such that the base.js can be re-called to load real time data
 if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		else {
-
 			setupThree()
 			setupSystem()
 			setupEarth()
-			// renderCities()
+
 			setupFlightsPathSplines()
 			setupFlightsPathLines()
 			setupFlightsPointCloud()
-			setupGUI()
-
+			if(flag === 1)
+				setupGUI()
+	
 			system.rotation.z += 23.4 * Math.PI / 180
 			system.rotation.x  = Math.PI / 5
 			animate()
+
 		}
 		console.log('Setup success')
+		console.log('Base call no', N_BASE_CALL)
+		console.log('flights:',flights.length)
 
 
 //Basic setup
@@ -292,6 +306,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		arcAngle, arcRadius,
 		spline
 
+		flightsTotal = flights.length
+
 		if( radius === undefined ) radius = 1
 		for( f = 0; f < flightsTotal; f ++ ){
 
@@ -360,6 +376,8 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 
 
 	function setupFlightsPointCloud(){
+		
+		flightsTotal = flights.length
 
 		var
 		f,
@@ -442,7 +460,10 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 	//  The opposite is true when you zoom in.
 
 	function setupFlightsPathLines() {
+		
+		flightsTotal = flights.length
 
+		
 		var 
 		geometry = new THREE.BufferGeometry(),
 		material = new THREE.LineBasicMaterial({
@@ -535,7 +556,10 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		segmentBeginsAt, 
 		segmentEndsAt
 
+		flightsTotal = flights.length
+		// console.log(flightsTotal)
 
+		
 		for( f = 0; f < flightsTotal; f ++ ){
 
 			if( Date.now() > flightsStartTimes[ f ] ){
@@ -692,7 +716,7 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 		gui.add( window, 'flightSpriteSize', 0.01, 0.2 ).name( 'Point size' ).onChange( function( value ){
 		
 			var f
-
+			flightsTotal = flights.length
 			for( f = 0; f < flightsTotal; f ++ ){
 			
 				flightSpriteSizes[ f ] = flightSpriteSize
@@ -706,3 +730,4 @@ if( !Detector.webgl ) Detector.addGetWebGLMessage( document.body )
 	}
 
 }
+
