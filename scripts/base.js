@@ -254,7 +254,7 @@ function setupEarth( radius ){
 	earth.receiveShadow = false
 	
 	system.add( earth )	
-	// system.add( stars )
+	system.add( stars )
 }
 
 
