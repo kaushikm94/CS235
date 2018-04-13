@@ -1,15 +1,6 @@
 /* CS235 Assignment 2 : Siddarth Kumar, Kaushik Murli - April 08, 2018 */
 
 
-var N_FLIGHTS = 1000
-
-//Globals
-
-var flights =[];
-var flightsJson;
-var len;
-var flightsMain = []
-
 
 
 function errorLog(error){
@@ -68,7 +59,7 @@ function parseflightsJson(flightsJson){
 // 				if(typeof flightsJson != 'undefined')
 // 					parseflightsJson(flightsJson);
 
-// 				callBase()
+// 				init(++N_BASE_CALL)
 // 				// reload(base.js)
 
 // 			}
@@ -92,20 +83,14 @@ $(document).ready(function(){
 				errorLog(error)
 			}
 				//flightsJson = obj
-				console.log('Flight data',flightsJson)
+				// console.log('Flight data',flightsJson)
 				if(typeof flightsJson != 'undefined')
 					parseflightsJson(flightsJson);
 
 				flights = flights.splice(0,N_FLIGHTS)
 
-				console.log('parsed flight data')
-				callBase(++N_BASE_CALL)
-
-				// Flight data can be spliced according to need. Data compression can be a future modification
-				//flights = flights.splice(0,500)
-
-				console.log('Parsed flight data from ajax')
-				callBase()
+				// console.log('parsed flight data')
+				init(++N_BASE_CALL)
 
 				//Base js recalled to load ajax call data
 				console.log('Reloaded base.js with new flight data')
